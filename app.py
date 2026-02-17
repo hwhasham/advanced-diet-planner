@@ -57,6 +57,13 @@ st.title("Advanced Diet & Macro Planner")
 st.caption("BMR • TDEE • Goal-Based Macros")
 
 with st.form("diet_form"):
+
+    st.subheader("Body Information")
+    st.divider()
+
+    col1, col2 = st.columns(2)
+
+with st.form("diet_form"):
     col1, col2 = st.columns(2)
 
     with col1:
