@@ -72,8 +72,14 @@ with st.form("diet_form"):
         height_in = st.number_input("Height (inches)", 0, 11, 10)
         age = st.number_input("Age", 15, 80, 30)
 
+with col2:
+    st.markdown("### Lifestyle & Goal")
+
+    gender = st.selectbox("Gender", ["male", "female"])
+
     with col2:
         gender = st.selectbox("Gender", ["male", "female"])
+
         activity = st.selectbox(
             "Activity Level", [1, 2, 3, 4, 5],
             format_func=lambda x: [
