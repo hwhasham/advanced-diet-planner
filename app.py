@@ -89,6 +89,10 @@ with col2:
         goal = st.selectbox("Goal",
                             ["Fat Loss", "Bulk", "Maintenance", "Recomp"])
 
+
+st.divider()
+st.subheader("Goal Intensity")
+
     intensity = 1
     if goal == "Fat Loss":
         intensity = st.selectbox(
