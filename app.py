@@ -102,6 +102,11 @@ st.subheader("Goal Intensity")
     submit = st.form_submit_button("Generate Plan", use_container_width=True)
 
 if submit:
+    if submit:
+
+    st.divider()
+    st.header("Your Personalized Plan")
+    
     height_cm = height_ft * 30.48 + height_in * 2.54
     bmr = calculate_bmr(weight, height_cm, age, gender)
     tdee = bmr * get_activity_factor(activity)
