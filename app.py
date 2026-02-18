@@ -1,9 +1,7 @@
 import streamlit as st
 
-# ---------------- CONFIG ----------------
-st.set_page_config(page_title="Advanced Diet & Macro Planner", layout="wide")
+# ---------------- FUNCTIONS ---------------- #
 
-# ---------------- FUNCTIONS ----------------
 def calculate_bmr(weight, height_cm, age, gender):
     if gender == "male":
         return (10 * weight) + (6.25 * height_cm) - (5 * age) + 5
@@ -16,20 +14,20 @@ def get_activity_factor(level):
 
 
 def get_goal_settings(goal, intensity, weight, tdee, gender):
-    protein_base = weight * (2.2 if gender == "male" else 2.0)
+    protein = weight * (2.2 if gender == "male" else 2.0)
 
     if goal == "Fat Loss":
         deficits = {1: 0.15, 2: 0.22, 3: 0.28}
-        fat_pct = {1: 25, 2: 22, 3: 20}
-        return -tdee * deficits[intensity], protein_base, fat_pct[intensity]
+        fats = {1: 25, 2: 22, 3: 20}
+        return -tdee * deficits[intensity], protein, fats[intensity]
 
     if goal == "Bulk":
-        return tdee * 0.15, protein_base, 27
+        return tdee * 0.15, protein, 27
 
     if goal == "Maintenance":
-        return 0, protein_base, 25
+        return 0, protein, 25
 
-    return 0, protein_base, 25
+    return 0, protein, 25
 
 
 def calculate_macros(calories, protein_g, fat_pct):
@@ -39,15 +37,16 @@ def calculate_macros(calories, protein_g, fat_pct):
     carbs_g = (calories - protein_cal - fat_cal) / 4
     return round(protein_g), round(fat_g), round(carbs_g)
 
-# ---------------- UI ----------------
+# ---------------- APP ---------------- #
+
+st.set_page_config(page_title="Advanced Diet & Macro Planner", layout="wide")
+
 st.title("Advanced Diet & Macro Planner")
 st.caption("BMR • TDEE • Goal-Based Macros")
 
 with st.form("diet_form"):
 
     st.subheader("Body Information")
-    st.divider()
-
     col1, col2 = st.columns(2)
 
     with col1:
@@ -62,17 +61,11 @@ with st.form("diet_form"):
             "Activity Level",
             [1, 2, 3, 4, 5],
             format_func=lambda x: [
-                "Sedentary",
-                "Lightly Active",
-                "Moderately Active",
-                "Very Active",
-                "Extra Active"
+                "Sedentary", "Lightly Active", "Moderately Active",
+                "Very Active", "Extra Active"
             ][x - 1]
         )
         goal = st.selectbox("Goal", ["Fat Loss", "Bulk", "Maintenance"])
-
-    st.divider()
-    st.subheader("Goal Intensity")
 
     intensity = 1
     if goal == "Fat Loss":
@@ -84,7 +77,8 @@ with st.form("diet_form"):
 
     submit = st.form_submit_button("Generate Plan", use_container_width=True)
 
-# ---------------- RESULTS ----------------
+# ---------------- RESULTS ---------------- #
+
 if submit:
     height_cm = height_ft * 30.48 + height_in * 2.54
     bmr = calculate_bmr(weight, height_cm, age, gender)
@@ -97,7 +91,8 @@ if submit:
     final_cal = tdee + cal_adj
     protein_g, fat_g, carbs_g = calculate_macros(final_cal, protein, fat_pct)
 
-    st.header("Your Personalized Plan")
+    st.divider()
+    st.subheader("Your Results")
 
     st.write(f"BMR: {round(bmr)} kcal")
     st.write(f"TDEE: {round(tdee)} kcal")
